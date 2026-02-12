@@ -417,9 +417,25 @@ def generate_print(input_folder: str,
     random.seed(seed)
     np.random.seed(seed % (2**32 - 1))
 
-    W, H = a3_pixels(cfg.dpi, cfg.orientation)
-    margin_px = mm_to_px(cfg.margin_mm, cfg.dpi)
-    usable_h = H - 2 * margin_px
+        # --- FAST PATH (preview-only): trabajamos directamente en resolución de preview ---
+    preview_only = bool(cfg.export_preview) and (not cfg.export_png) and (not cfg.export_pdf)
+
+    W_a3, H_a3 = a3_pixels(cfg.dpi, cfg.orientation)
+    margin_px_a3 = mm_to_px(cfg.margin_mm, cfg.dpi)
+
+    if preview_only:
+        # Escalamos todo al tamaño de preview para acelerar (coordenadas quedan en espacio preview)
+        max_side = int(cfg.preview_max_side_px)
+        scale_preview = min(max_side / max(W_a3, H_a3), 1.0)
+        W = max(1, int(round(W_a3 * scale_preview)))
+        H = max(1, int(round(H_a3 * scale_preview)))
+        margin_px = max(0, int(round(margin_px_a3 * scale_preview)))
+        usable_h = H - 2 * margin_px
+    else:
+        scale_preview = 1.0
+        W, H = W_a3, H_a3
+        margin_px = margin_px_a3
+        usable_h = H - 2 * margin_px
 
     small_range, medium_range, medium_prob = get_scale_profile_by_count(int(cfg.target_count))
 
@@ -471,7 +487,8 @@ def generate_print(input_folder: str,
 
         # Tamaño relativo (siempre varía)
         rel = choose_scale(small_range, medium_range, medium_prob)
-        target_h = max(80, int(rel * usable_h))
+        min_obj_h = max(20, int(round(80 * scale_preview)))
+        target_h = max(min_obj_h, int(rel * usable_h))
 
         w0, h0 = im.size
         max_h = int(h0 * cfg.max_upscale)
@@ -556,6 +573,9 @@ def generate_print(input_folder: str,
         out_rgb.save(pdf_path, "PDF", resolution=cfg.dpi)
 
     if cfg.export_preview:
+       if preview_only:
+        out_rgb.save(preview_path, "JPEG", quality=cfg.preview_quality, optimize=True, progressive=True)
+       else:
         prev = make_preview_jpg(out_rgb, cfg.preview_max_side_px)
         prev.save(preview_path, "JPEG", quality=cfg.preview_quality, optimize=True, progressive=True)
 

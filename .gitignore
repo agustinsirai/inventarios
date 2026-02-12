@@ -1,0 +1,5 @@
+storage/previews/* 
+storage/json/* 
+storage/_tmp/* 
+__pycache__/ 
+*.pyc 

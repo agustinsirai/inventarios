@@ -1,0 +1,63 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inventarios</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="bg">
+    <video id="bgVideo" class="bgVideo" autoplay muted loop playsinline></video>
+    <div class="bgWash"></div>
+  </div>
+
+  <header class="top">
+  <div class="title">Inventarios</div>
+  <div class="author">
+    <a href="https://agustinsirai.com" target="_blank" rel="noopener">Agustín Sirai</a>
+  </div>
+</header>
+
+  <main class="main">
+    <section class="previewWrap">
+      <div class="previewPanel">
+        <img id="previewImg" class="previewImg" alt="preview" />
+        <div id="previewEmpty" class="previewEmpty">Generá un preview.</div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="row">
+        <label class="lbl">Cantidad</label>
+        <input id="count" class="num" type="number" min="1" max="120" value="12" />
+      </div>
+
+      <div class="row">
+        <label class="lbl">Orientación</label>
+        <div class="seg">
+          <button id="btnPortrait" class="segBtn isOn" type="button">Vertical</button>
+          <button id="btnLandscape" class="segBtn" type="button">Horizontal</button>
+        </div>
+      </div>
+
+      <button id="btnGenerate" class="primary" type="button">Generar</button>
+
+      <div class="meta">
+        <span id="metaText"></span>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fullscreen viewer -->
+  <div id="viewer" class="viewer" aria-hidden="true">
+    <img id="viewerImg" class="viewerImg" alt="fullscreen preview" />
+    <div id="viewerHud" class="viewerHud isHidden">
+      <button id="btnClose" class="hudBtn" type="button">Cerrar</button>
+      <a id="btnDownload" class="hudBtn" href="#" download>Descargar JPG</a>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

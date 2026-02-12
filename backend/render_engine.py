@@ -27,6 +27,8 @@ def generate_preview_and_json(
     NO genera PDF ni PNG alta en esta etapa.
     """
     _ensure_dirs()
+    t0 = datetime.now()
+    print("[timing] start", t0.isoformat())
 
     print_id = uuid.uuid4().hex[:12]
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -46,7 +48,8 @@ def generate_preview_and_json(
     # (preview settings ya vienen en el script; podés tocar acá si querés)
     # cfg.preview_max_side_px = 1600
     # cfg.preview_quality = 85
-
+    t1 = datetime.now()
+    print("[timing] before eng.generate_print", (t1 - t0).total_seconds(), "s")
     payload = eng.generate_print(
         input_folder=TIFF_DIR,
         output_folder=out_dir,
@@ -56,7 +59,9 @@ def generate_preview_and_json(
         db_tags_text="",
         assoc_enabled=False,
     )
-
+    t2 = datetime.now()
+    print("[timing] after eng.generate_print", (t2 - t1).total_seconds(), "s")
+    print("[timing] total so far", (t2 - t0).total_seconds(), "s")
     prev_src = payload["outputs"]["preview"]
     json_src = payload["outputs"]["json"]
 

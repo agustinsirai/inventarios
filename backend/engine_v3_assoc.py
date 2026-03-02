@@ -100,7 +100,8 @@ def mm_to_px(mm: float, dpi: int) -> int:
 
 
 def list_tiffs(folder: str) -> List[str]:
-    exts = {".tif", ".tiff"}
+    # Mixto: acepta PNG y TIFF (por si queda algo colado)
+    exts = {".png", ".tif", ".tiff"}
     files = []
     for fn in os.listdir(folder):
         p = os.path.join(folder, fn)
@@ -410,7 +411,7 @@ def generate_print(input_folder: str,
                    assoc_enabled: bool) -> Dict[str, Any]:
     files = list_tiffs(input_folder)
     if not files:
-        raise RuntimeError("No encontré TIFFs en la carpeta seleccionada.")
+        raise RuntimeError("No encontré imágenes (PNG/TIFF) en la carpeta seleccionada.")
 
     # Seed (reproducible)
     seed = int(time.time() * 1000)

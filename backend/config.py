@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Assets
-TIFF_DIR = Path(os.getenv("TIFF_DIR", BASE_DIR / "assets_tiff")).resolve()
+TIFF_DIR = Path(os.getenv("TIFF_DIR", BASE_DIR / "assets_png")).resolve()
 
 # Storage (runtime outputs)
 STORAGE_DIR = Path(os.getenv("STORAGE_DIR", BASE_DIR / "storage")).resolve()
